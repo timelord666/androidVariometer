@@ -32,7 +32,8 @@ public class Beeper {
         }
 
         if ((vario > UpMinSoundThreshold) && (vario < UpMaxSoundThreshold)) {
-            duration = (BeepDurationX2 - vario * BeepDurationCoefX2 >= 25) ? BeepDurationX2 - vario * BeepDurationCoefX2 : 25;
+            //duration = (BeepDurationX2 - vario * BeepDurationCoefX2 >= 25) ? BeepDurationX2 - vario * BeepDurationCoefX2 : 25;
+            duration = duration * 3;
             if (fl && ((System.currentTimeMillis() - time) > duration)) {
                 time = System.currentTimeMillis();
                 tone.setTuneFreq(InitialFreqUp + vario * FreqCoef);

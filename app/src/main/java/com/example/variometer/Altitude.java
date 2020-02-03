@@ -46,7 +46,7 @@ public class Altitude implements SensorEventListener {
 
         assert manager != null;
         baro = manager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-        kalman = new KalmanFilter((float)2.0, (float)2.0, (float)0.4);
+        kalman = new KalmanFilter((float)2.5, (float)2.5, (float)0.4);
     }
 
 
@@ -83,14 +83,12 @@ public class Altitude implements SensorEventListener {
 //
 
 
+    public float calcAltitude(float seaLevelPressure, float pressure) {
+        //pressure /= 100.0F;
 
+        return (float)44330.0 * (float)(1.0 - Math.pow(pressure / seaLevelPressure, 0.1903));
 
-
-
-
-
-
-
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -100,18 +98,19 @@ public class Altitude implements SensorEventListener {
                 index = 0;
             }
 
-            altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
+            //altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
+            altitude = calcAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, event.values[0]);
 
-            if (flag) {
-                altitudes[0] = altitude;
-                altitudes[1] = altitude;
-                altitudes[2] = altitude;
-                filteredAltitude = altitude;
-                flag = false;
-            }
+//            if (flag) {
+//                altitudes[0] = altitude;
+//                altitudes[1] = altitude;
+//                altitudes[2] = altitude;
+//                filteredAltitude = altitude;
+//                flag = false;
+//            }
 
 
-            altitudes[index] = altitude;
+//            altitudes[index] = altitude;
 //            filterMedian();
 //            filterRunningMiddle(event.timestamp);
             filteredAltitude = kalman.filter(altitude);
